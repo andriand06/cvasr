@@ -29,4 +29,9 @@ class barang_model extends Model
     {
         return $this->db->table('barang')->update($data, array('id' => $id));
     }
+    public function getLike($keyword)
+    {
+
+        return $this->db->table('barang')->like('namabarang', $keyword)->orLike('jumlah', $keyword)->orLike('harga', $keyword)->orLike('kode', $keyword)->get()->getResultArray();
+    }
 }

@@ -17,22 +17,35 @@ class Login extends BaseController
     {
         $session = \config\Services::session();
         helper(['form', 'url']);
-        $val = $this->validate([
-            'username' => 'required|min_length[8]',
-            'password' => 'required|min_length[8]|regex_match[/^[A-Za-z0-9]+$/]',
 
-        ]);
-
-        if ($val == false) {
+        if (!$this->validate([
+            'username' => [
+                'rules' => 'required|min_length[8]',
+                'errors' => [
+                    'required' => '{field} harus diisi',
+                    'is_unique' => '{field} sudah ada',
+                    'min_length' => '{field} minimal 8 huruf'
+                ],
+            ],
+            'password' => [
+                'rules' => 'required|min_length[8]|regex_match[/^[A-Za-z0-9]+$/]',
+                'errors' => [
+                    'required' => '{field} harus diisi',
+                    'min_length' => '{field} minimal 8 huruf',
+                ],
+            ],
+        ])) {
             $data = [
-                'judul' => 'Login',
+                'judul' => 'Halaman Login',
                 'isi' => 'Auth/index',
                 'username' => $this->request->getPost('username'),
                 'password' => $this->request->getPost('password'),
+                'val' => \Config\Services::validation()
 
 
 
             ];
+
 
             return view('login/login.php', $data);
         } else {
@@ -51,6 +64,7 @@ class Login extends BaseController
                     ];
 
                     $session->set($data);
+
                     return view('admin/index.php', $data);
                 } else {
                     session()->setFlashdata('error', 'Maaf Username atau password salah');
@@ -80,6 +94,7 @@ class Login extends BaseController
                 'username' => $this->request->getPost('username'),
                 'password' => $this->request->getPost('password'),
                 'email' => $this->request->getPost('email'),
+                'val' => \Config\Services::validation()
 
 
             ];
@@ -110,8 +125,10 @@ class Login extends BaseController
     {
         // unset($_SESSION['username']);
         //unset($_SESSION['role_id']);
+        $session = \config\Services::session();
+        $session->remove('username');
         session()->removeTempdata('username');
-        session()->removeTempdata('role_id');
+
         session()->setFlashdata('success', 'Anda Berhasil Logout!');
         return redirect()->to(base_url('login'));
     }

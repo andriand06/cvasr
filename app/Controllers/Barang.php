@@ -10,27 +10,48 @@ class Barang extends BaseController
     public function __construct()
     {
         $this->barangmodel = new barang_model();
+        $this->cek_status();
     }
     public function index()
     {
+        if ($this->cek_status()) {
+            return redirect()->to('login');
+        }
         $session = \config\Services::session();
-        $data = [
-            'judul' => 'Data Barang',
-            'isi' => $this->barangmodel->getBarang(),
 
-            'username' =>  $session->get('username'),
-            'datecreated' => $this->request->getPost('datecreated'),
+        if ($this->request->getPost('keyword')) {
+            $keyword = $this->request->getPost('keyword');
+            $data = [
+                'judul' => 'Barang',
 
-        ];
+                'isi' => $this->barangmodel->getLike($keyword),
+                'username' => $session->get('username'),
+                'datecreated' => $session->get('datecreated')
 
-        echo view('barang/index.php', $data);
+            ];
+            echo view('barang/index.php', $data);
+        } else {
+            $data = [
+                'judul' => 'Data Barang',
+                'isi' => $this->barangmodel->getBarang(),
+
+                'username' =>  $session->get('username'),
+                'datecreated' => $session->get('datecreated'),
+
+            ];
+
+            echo view('barang/index.php', $data);
+        }
     }
     public function tambah()
     {
+        if ($this->cek_status()) {
+            return redirect()->to('/login');
+        }
         session();
         $session = \config\Services::session();
         $data = [
-
+            'judul' => 'Tambah Data Barang',
             'username' =>  $session->get('username'),
             'datecreated' => $session->get('datecreated'),
             'validation' => \Config\Services::validation()
@@ -40,6 +61,9 @@ class Barang extends BaseController
 
     public function save()
     {
+        if ($this->cek_status()) {
+            return redirect()->to('/login');
+        }
         if (!$this->validate([
             'kode' => [
                 'rules' => 'required|is_unique[barang.kode]',
@@ -97,16 +121,21 @@ class Barang extends BaseController
 
     public function delete($id)
     {
+        if ($this->cek_status()) {
+            return redirect()->to('/login');
+        }
         $this->barangmodel->delete($id);
         session()->setFlashdata('pesan', 'Data Berhasil dihapus');
         return redirect()->to('/barang');
     }
     public function edit($id)
     {
-
+        if ($this->cek_status()) {
+            return redirect()->to('/login');
+        }
         $session = \config\Services::session();
         $data = [
-
+            'judul' => 'Ubah Data Barang',
             'validation' => \Config\Services::validation(),
             'isi' =>  $this->barangmodel->getData($id),
             'username' =>  $session->get('username'),
@@ -117,6 +146,9 @@ class Barang extends BaseController
     }
     public function update($id)
     {
+        if ($this->cek_status()) {
+            return redirect()->to('/login');
+        }
         $barangLama = $this->barangmodel->getData($id);
 
         if ($barangLama['Kode'] == $this->request->getVar('kode')) {

@@ -5,7 +5,7 @@
         <div class="container mt-3">
             <div class="card">
                 <h5 class="card-header">
-                    <span class="logo-lg"><b>Ubah Data Barang</b></span>
+                    <span class="logo-lg"><b><?= $judul; ?></b></span>
 
                 </h5>
                 <div class="card-body">

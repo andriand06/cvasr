@@ -14,18 +14,16 @@
 
     <div class="container mt-5">
 
-        <h1>Halaman Login</h1>
-        <div class="row">
-            <div class="col-md-8">
-                <?php if (session()->getFlashdata('success')) : ?>
-                    <div class="alert alert-success">
-                        <?php echo session()->getFlashdata('success');
-                        ?>
+        <h1><?= $judul; ?></h1>
 
-                    <?php endif; ?>
-                    </div>
+        <?php if (session()->getFlashdata('success')) : ?>
+            <div class="alert alert-success">
+                <?php echo session()->getFlashdata('success');
+                ?>
             </div>
-        </div>
+        <?php endif; ?>
+
+
         <div class="row">
             <div class="col-md-8">
                 <?php if (session()->getFlashdata('error')) :
@@ -39,20 +37,22 @@
             </div>
         </div>
 
+
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-8">
                 <form class="px-4 py-3" method="post" action="">
                     <div class="form-group">
 
-                        <input type="text" class="form-control" name="username" placeholder="Username" autocomplete="off" value="<?php set_value('username');
-                                                                                                                                    ?>">
-                        <small style="color:red;">
-                            <?= \Config\Services::validation()->getError('username'); ?></small>
+                        <input type="text" class="form-control <?= ($val->hasError('username')) ? 'is-invalid' : ''; ?>" name="username" placeholder="Username" autocomplete="off" value="<?= old('username'); ?>">
+                        <div class="invalid-feedback" style="color:red;">
+                            <?= $val->getError('username'); ?>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                        <small style="color:red;">
-                            <?= \Config\Services::validation()->getError('password'); ?></small>
+                        <input type="password" class="form-control <?= ($val->hasError('password')) ? 'is-invalid' : ''; ?>" id="password" name="password" placeholder="Password">
+                        <div class="invalid-feedback" style="color:red;">
+                            <?= $val->getError('password'); ?>
+                        </div>
                     </div>
                     <div class="form-group">
                         <div class="form-check">

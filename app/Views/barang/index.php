@@ -3,14 +3,34 @@
 
 <div class="wrapper">
     <div class="content-wrapper">
-        <?php if (session()->getFlashdata('pesan')) : ?>
-            <div class="container mt-3">
+        <div class="container mt-3">
+            <h1><?= $judul; ?></h1>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <form action="<?= base_url('barang'); ?>" method="post">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="keyword" placeholder="Cari Nama Barang" aria-label="Recipient's username" aria-describedby="basic-addon2" autocomplete="off" autofocus>
+                            <div class="input-group-btn">
+                                <button class="btn btn-flat" type="submit" name="submit"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <?php if (empty($isi)) : ?>
+                <p style="color:red;" class="container mr-3">Maaf,Data tidak ditemukan.</p>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('pesan')) : ?>
+
+
                 <div class="alert alert-success" data-flashdata="<?= session()->getFlashdata('pesan'); ?>">
                     <?php echo session()->getFlashdata('pesan'); ?>
                 </div>
-            </div>
 
-        <?php endif; ?>
+
+            <?php endif; ?>
+        </div>
         <div class="table-responsive">
             <table class="table">
                 <thead>

@@ -45,4 +45,12 @@ class BaseController extends Controller
 		$this->barangmodel = new \App\Models\barang_model();
 		session();
 	}
+	public function cek_status()
+	{
+		$session = \Config\Services::session();
+		if ($session->has('username') == NULL) {
+			session()->setFlashdata('error', 'Silahkan login terlebih dahulu untuk mengakses halaman ini');
+			return redirect()->to(base_url('Login'));
+		}
+	}
 }
