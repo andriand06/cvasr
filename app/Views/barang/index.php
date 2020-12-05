@@ -71,7 +71,9 @@
         </div>
         <div class="container">
             <a href="<?= base_url('barang/tambah'); ?>" class="btn btn-primary">Tambah Data Barang</a>
+            <?= $pager->links(); ?>
         </div>
+
     </div>
 </div>
 

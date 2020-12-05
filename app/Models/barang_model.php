@@ -32,6 +32,10 @@ class barang_model extends Model
     public function getLike($keyword)
     {
 
-        return $this->db->table('barang')->like('namabarang', $keyword)->orLike('jumlah', $keyword)->orLike('harga', $keyword)->orLike('kode', $keyword)->get()->getResultArray();
+        return $this->table('barang')->like('namabarang', $keyword)->orLike('jumlah', $keyword)->orLike('harga', $keyword)->orLike('kode', $keyword);
+    }
+    public function getNamaBarang($selected)
+    {
+        return $this->where(['namabarang' => $selected])->first();
     }
 }

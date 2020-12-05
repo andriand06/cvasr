@@ -117,6 +117,7 @@ class Login extends BaseController
             $data1 = [
                 'isi' => 'Login/registration',
                 'judul' => 'Registrasi',
+                'jumlah' => '1',
             ];
             echo view('login/registration', $data1);
         }
