@@ -38,4 +38,10 @@ class barang_model extends Model
     {
         return $this->where(['namabarang' => $selected])->first();
     }
+    public function getKodeTransaksi()
+    {
+        $query = $this->db->query("SELECT MAX(KodeTransaksi) as kodetransaksi from barang_keluar");
+        $hasil = $query->getRow();
+        return $hasil->kodetransaksi;
+    }
 }

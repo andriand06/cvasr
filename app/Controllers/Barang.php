@@ -2,15 +2,21 @@
 
 namespace App\Controllers;
 
+use App\Models\barang_keluar_model;
 use App\Models\barang_model;
+use App\Models\barangkeluar_model;
+use CodeIgniter\I18n\Time;
+use TheSeer\Tokenizer\Token;
 
 class Barang extends BaseController
 {
     protected $barangmodel;
+    protected $barangkeluar_model;
     public function __construct()
     {
         $this->barangmodel = new barang_model();
         $this->cek_status();
+        $this->barangkeluar_model = new barangkeluar_model();
     }
     public function index()
     {
@@ -212,7 +218,7 @@ class Barang extends BaseController
         session()->setFlashdata('pesan', 'Data Berhasil diubah');
         return redirect()->to('/barang');
     }
-    public function penjualan()
+    public function barangkeluar()
     {
         $session = \Config\Services::session();
         $validation = \Config\Services::validation();
@@ -220,6 +226,7 @@ class Barang extends BaseController
         if (isset($_GET['namabarang'])) {
             $isi = $_GET['namabarang'];
             $barang = $this->barangmodel->where('namabarang', $isi)->get()->getRowArray();
+            $tgl = new Time('now');
 
             if (!$this->validate([
                 'jumlah' => [
@@ -230,113 +237,97 @@ class Barang extends BaseController
                     ],
                 ],
             ])) {
+                $jumlah = $this->request->getVar('jumlah');
+                if ($jumlah == '' | $jumlah == null) {
+                    $total = 0;
+                }
+                $total = (int)$jumlah * (int)$this->request->getVar('harga');
                 $data = [
-                    'judul' => 'Penjualan Barang',
+                    'judul' => 'Barang Keluar',
                     'username' => $session->get('username'),
                     'datecreated' => $session->get('datecreated'),
-
+                    'tgl' => $tgl,
                     'barang' => $barang,
                     'validation' => $validation,
+                    'KodeTransaksi' => $this->barangmodel->getKodeTransaksi(),
                     'Kode' => $this->request->getVar('kode'),
                     'NamaBarang' => $isi,
-                    'Jumlah' => $this->request->getVar('jumlah'),
+                    'Jumlah' =>  $jumlah = $this->request->getVar('jumlah'),
                     'Satuan' => $this->request->getVar('satuan'),
                     'Harga' => $this->request->getVar('harga'),
-                    'Total' => $this->request->getVar('jumlah') * $this->request->getVar('harga')
+                    'Total' => $total
                 ];
             }
 
             session()->setFlashdata('error', 'Mohon Lengkapi Form');
-            return view('barang/penjualan', $data);
+
+            return view('barang/barangkeluar', $data);
+        } else {
+            $data = [
+                'judul' => 'Barang Keluar',
+
+                'username' => $session->get('username'),
+                'datecreated' => $session->get('datecreated'),
+                'barang' => $this->barangmodel->getBarang(),
+                'KodeTransaksi' => $this->barangmodel->getKodeTransaksi(),
+                'Kode' => '',
+                'Jumlah' => '',
+                'Satuan' => '',
+                'Harga' => '',
+                'Total' => $this->request->getVar('jumlah') * $this->request->getVar('harga')
+
+            ];
+
+            return view('barang/barangkeluar', $data);
         }
+    }
 
-        $barang = $this->barangmodel->getBarang();
+    public function read()
+    {
 
+
+        $validation = \Config\Services::validation();
+        if (isset($_GET['namabarang'])) {
+            $isi = $_GET['namabarang'];
+        }
+        $brg = $this->barangmodel->where('namabarang', $isi)->get()->getRowArray();
+        $jumlah = $this->request->getVar('jumlah');
+        $total = $jumlah * $this->request->getVar('harga');
+        $session = \Config\Services::session();
         $data = [
-            'judul' => 'Penjualan Barang',
-
+            'judul' => 'Barang Keluar',
             'username' => $session->get('username'),
             'datecreated' => $session->get('datecreated'),
-            'barang' => $barang,
-
-            'Kode' => '',
-            'Jumlah' => '',
-            'Satuan' => '',
-            'Harga' => '',
+            'brg' => $brg,
+            'barang' => $this->barangmodel->getBarang(),
+            'validation' => $validation,
+            'Kode' => $this->request->getVar('kode'),
+            'KodeTransaksi' => $this->barangmodel->getKodeTransaksi(),
+            'NamaBarang' => $isi,
+            'Jumlah' => $this->request->getVar('jumlah'),
+            'Satuan' => $this->request->getVar('satuan'),
+            'Harga' => $this->request->getVar('harga'),
             'Total' => $this->request->getVar('jumlah') * $this->request->getVar('harga')
-
         ];
-
-        return view('barang/penjualan', $data);
+        return view('barang/barangkeluar', $data);
     }
     public function transaksi()
     {
-        $session = \Config\Services::session();
-        $validation = \Config\Services::validation();
-        $selected = $this->request->getVar('namabarang');
-        if (!$this->validate([
-            'jumlah' => [
-                'rules' => 'required|numeric',
-                'errors' => [
-                    'required' => '{field} harus diisi',
-                    'numeric' => '{field} Format harus dalam bentuk angka',
-                ],
-            ],
-        ])) {
 
-            $data = [
-                'judul' => 'Penjualan Barang',
-                'username' => $session->get('username'),
-                'datecreated' => $session->get('datecreated'),
-                'selected' => $selected,
-                'barang' => $this->barangmodel->getNamaBarang($selected),
-                'validation' => $validation,
-                'Kode' => $this->request->getVar('kode'),
-                'NamaBarang' => $selected,
-                'Jumlah' => $this->request->getVar('jumlah'),
-                'Satuan' => $this->request->getVar('satuan'),
-                'Harga' => $this->request->getVar('harga'),
-                'Total' => $this->request->getVar('jumlah') * $this->request->getVar('harga')
-            ];
-            session()->setFlashdata('error', 'Mohon Lengkapi Form');
-            return view('/barang/penjualan', $data);
-        }
+        $jumlah = $this->request->getVar('jumlah');
+        $total = (int)$jumlah * (int)$this->request->getVar('harga');
 
-        $data = [
-            'judul' => 'Penjualan Barang',
-            'username' => $session->get('username'),
-            'datecreated' => $session->get('datecreated'),
-            'selected' => $selected,
-            'barang' => $this->barangmodel->getNamaBarang($selected),
-            'validation' => $validation,
+        $this->barangkeluar_model->save([
+            'KodeTransaksi' => $this->request->getVar('kodetransaksi'),
             'Kode' => $this->request->getVar('kode'),
-            'NamaBarang' => $selected,
-            'Jumlah' => $this->request->getVar('jumlah'),
+            'NamaBarang' => $this->request->getVar('namabarang'),
+            'Jumlah' =>  $jumlah,
             'Satuan' => $this->request->getVar('satuan'),
             'Harga' => $this->request->getVar('harga'),
-            'Total' => $this->request->getVar('jumlah') * $this->request->getVar('harga')
-        ];
-        return view('barang/penjualan', $data);
-    }
-    public function read()
-    {
-        $validation = \Config\Services::validation();
-        $selected = $this->request->getVar('namabarang');
-        $session = \Config\Services::session();
-        $data = [
-            'judul' => 'Penjualan Barang',
-            'username' => $session->get('username'),
-            'datecreated' => $session->get('datecreated'),
-            'selected' => $selected,
-            'barang' => $this->barangmodel->getNamaBarang($selected),
-            'validation' => $validation,
-            'Kode' => $this->request->getVar('kode'),
-            'NamaBarang' => $selected,
-            'Jumlah' => $this->request->getVar('jumlah'),
-            'Satuan' => $this->request->getVar('satuan'),
-            'Harga' => $this->request->getVar('harga'),
-            'Total' => $this->request->getVar('jumlah') * $this->request->getVar('harga')
-        ];
-        return view('barang/penjualan', $data);
+            'Total' => $total,
+
+        ]);
+        session()->setFlashdata('pesan', 'Data Berhasil ditambahkan');
+        return redirect()->to('/barang/barangkeluar');
     }
 }

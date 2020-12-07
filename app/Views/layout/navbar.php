@@ -109,7 +109,7 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="/barang/penjualan"><i class="fa fa-circle-o"></i>Penjualan</a></li>
+                            <li><a href="/barang/barangkeluar"><i class="fa fa-circle-o"></i>Barang Keluar</a></li>
                             <li><a href="/adminlte/pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i>Pembelian</a></li>
                         </ul>
                     </li>
