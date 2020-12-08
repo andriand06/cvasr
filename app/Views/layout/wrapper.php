@@ -248,7 +248,9 @@
 <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="<?= base_url(); ?>assets/js/bootstrap.min.js"></script>
+<script src="<?= base_url(); ?>assets/js/jquery-3.2.1.min.js"></script>
 <!-- jQuery 3 -->
 <script src="/adminlte/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
