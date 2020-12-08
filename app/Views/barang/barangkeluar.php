@@ -22,7 +22,7 @@
                     <?php endif;  ?>
                     <?php if (session()->getFlashdata('pesan')) : ?>
                         <div class="container mt-3">
-                            <div class="alert alert-danger" data-flashdata="<?= session()->getFlashdata('pesan'); ?>">
+                            <div class="alert alert-success" data-flashdata="<?= session()->getFlashdata('pesan'); ?>">
                                 <?php echo session()->getFlashdata('pesan'); ?>
                             </div>
                         </div>

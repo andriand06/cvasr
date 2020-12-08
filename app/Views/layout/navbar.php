@@ -101,7 +101,8 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?= base_url('barang'); ?>"><i class="fa fa-circle-o"></i>Data Barang</a></li>
-                    <li><a href="/adminlte/pages/layout/boxed.html"><i class="fa fa-circle-o"></i>Laporan Penjualan</a></li>
+                    <li><a href="/barang/penjualan"><i class="fa fa-circle-o"></i>Penjualan</a></li>
+                    <li><a href="/pelanggan/"><i class="fa fa-circle-o"></i>Pelanggan</a></li>
                     <li class="treeview">
                         <a href="#"><i class="fa fa-circle-o"></i>Transaksi
                             <span class="pull-right-container">

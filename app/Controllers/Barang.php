@@ -28,14 +28,6 @@ class Barang extends BaseController
         $keyword = $this->request->getPost('keyword');
         if ($keyword) {
             $barang = $this->barangmodel->getLike($keyword);
-            // $data = [
-            //'judul' => 'Barang',
-            //'isi' => $this->barangmodel->getLike($keyword),
-            //'username' => $session->get('username'),
-            //'datecreated' => $session->get('datecreated')
-
-            // ];
-            //echo view('barang/index.php', $data);
         } else {
             $barang = $this->barangmodel;
         }
@@ -329,5 +321,19 @@ class Barang extends BaseController
         ]);
         session()->setFlashdata('pesan', 'Data Berhasil ditambahkan');
         return redirect()->to('/barang/barangkeluar');
+    }
+    public function penjualan()
+    {
+        list($day, $month, $year, $hour, $min, $sec) = explode("/", date('d/m/Y/h/i/s'));
+        $tgl = $month . $day . $year . $hour . $min . $sec;
+        $session = \Config\Services::session();
+        $data = [
+            'judul' => 'Penjualan Barang',
+            'username' => $session->get('username'),
+            'datecreated' => $session->get('datecreated'),
+            'nonota' => $tgl,
+
+        ];
+        return view('barang/penjualan', $data);
     }
 }

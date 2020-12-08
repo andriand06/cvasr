@@ -35,6 +35,7 @@ $routes->get('/', 'Home::index');
 $routes->delete('/barang/(:num)', 'Barang::delete/$1');
 $routes->get('/barang/edit/(:segment)', 'Barang::edit/$1');
 
+$routes->delete('/pelanggan/(:num)', 'Pelanggan::delete/$1');
 
 /**
  * --------------------------------------------------------------------
