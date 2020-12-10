@@ -7,6 +7,7 @@ use App\Models\barang_model;
 use App\Models\barangkeluar_model;
 use App\Models\pelanggan_model;
 use CodeIgniter\I18n\Time;
+use CodeIgniter\Session\Session;
 use TheSeer\Tokenizer\Token;
 
 class Barang extends BaseController
@@ -353,15 +354,18 @@ class Barang extends BaseController
         if (isset($_POST['namabarang'])) {
             $this->nb = $_POST['namabarang'];
             $b = $this->barangmodel->where('namabarang', $this->nb)->get()->getRowArray();
-
+            $jumlah = $_POST['jumlah'];
             $isi = [
+
                 'kode' => $b['Kode'],
                 'namabarang' => $b['NamaBarang'],
                 'satuan' => $b['Satuan'],
-                'jumlah' => $b['Jumlah'],
+                'jumlah' => $jumlah,
                 'harga' => $b['Harga'],
 
             ];
+
+
             $_SESSION['isi'][] = $isi;
 
 
@@ -372,7 +376,7 @@ class Barang extends BaseController
                 'namabarang' => $this->nb,
                 'pelanggan' => $this->pelanggan_model->getPelanggan(),
                 'query' => $query,
-                'subtotal' => (int)$this->request->getVar('jumlah') * (int)$this->request->getVar('harga'),
+
                 'barang' => $this->barangmodel->getBarang()
             ];
             return view('barang/penjualan', $data);
@@ -388,7 +392,7 @@ class Barang extends BaseController
                 'kode' => '',
                 'barang' => $this->barangmodel->getBarang()
             ];
-            session()->setFlashdata('error', 'Silahkan pilih barang terlebih dahulu!');
+
             return view('barang/penjualan', $data);
         }
 
@@ -466,5 +470,26 @@ class Barang extends BaseController
     {
         $_SESSION['isi'] = [];
         return redirect()->to('/barang/penjualan');
+    }
+    public function hapustransaksi()
+    {
+
+        $kode = $_GET['kode'];
+
+        $isi = $_SESSION['isi'];
+
+
+        $k = array_filter($isi, function ($i) use ($kode) {
+            return ($i['kode'] == $kode);
+        });
+
+        foreach ($k as $key => $value) {
+
+            unset($_SESSION['isi'][$key]);
+        }
+        $_SESSION['isi'] = array_values($_SESSION['isi']);
+        session()->setFlashdata('pesan', 'data berhasil dihapus!');
+
+        return redirect()->to('/barang/penjualan')->withInput();
     }
 }

@@ -25,6 +25,15 @@ use CodeIgniter\I18n\Time;
 
                             <?php endif;  ?>
 
+                            <?php if (session()->getFlashdata('pesan')) : ?>
+
+
+                                <div class="alert alert-success" data-flashdata="<?= session()->getFlashdata('pesan'); ?>">
+                                    <?php echo session()->getFlashdata('pesan'); ?>
+                                </div>
+
+                            <?php endif;  ?>
+
                         </div>
                     </div>
                     <div class="row">
@@ -69,7 +78,7 @@ use CodeIgniter\I18n\Time;
                                                 <form action="" method="get">
                                                     <?= csrf_field(); ?>
                                                     <select name="namapelanggan" id="namapelanggan" class="custom-select" onchange="this.form.submit()">
-                                                        <option> Pilih Pelanggan</option>
+                                                        <option value="A"> Pilih Pelanggan</option>
                                                         <?php foreach ($pelanggan as $p) : ?>
                                                             <?php
                                                             $selected = '';
@@ -121,17 +130,24 @@ use CodeIgniter\I18n\Time;
 
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <form action="" method="post">
-                                        <div class="form-group">
+                                    <a href="/barang/reset" class="btn btn-warning">Reset Keranjang</a>
+                                    <form action="" method="post" class="form-inline">
+
+                                        <div class="input-group">
+
+
                                             <label for="namabarang">Nama Barang</label>
-                                            <a href="/barang/reset" class="btn btn-warning">Reset Keranjang</a>
                                             <select name="namabarang" id="namabarang" class="form-control">
                                                 <option value="">Pilih Barang</option>
                                                 <?php foreach ($barang as $b) : ?>
                                                     <option value="<?= $b['NamaBarang']; ?> "><?= $b['NamaBarang']; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <input type="submit" value="Tambah" class="btn btn-primary" style="display :block">
+                                        </div>
+                                        <div class="input-group">
+                                            <input type="number" name="jumlah" id="jumlah" class="form-control" placeholder="Jumlah">
+                                            <input type="submit" value="Tambah" class="btn btn-primary">
+
                                         </div>
                                     </form>
                                 </div>
@@ -151,6 +167,7 @@ use CodeIgniter\I18n\Time;
                                         <th style='width:75px;'>Jumlah</th>
                                         <th style='width:100px;'>Harga</th>
                                         <th style='width:100px;'>Sub Total</th>
+                                        <th></th>
 
 
                                     </tr>
@@ -158,14 +175,15 @@ use CodeIgniter\I18n\Time;
                                 <tbody>
                                     <?php if (isset($_POST['namabarang'])) : ?>
 
-                                        <?php foreach ($_SESSION['isi'] as $i) : ?>
+                                        <?php foreach ($_SESSION['isi'] as $i) :  ?>
                                             <tr>
-                                                <td><input type="text" value="<?= $i['kode']; ?>" style='width:45px;'></td>
-                                                <td><input type="text" value="<?= $i['namabarang']; ?>" style='width:65px;'></td>
-                                                <td><input type="text" value="<?= $i['satuan']; ?>" style='width:35px;'></td>
-                                                <td><input type="text" name="jumlah" id="jumlah" value="" style='width:35px;'></td>
-                                                <td><input type="text" name="harga" id="harga" value="<?= $i['harga']; ?>"></td>
-                                                <td><input type="text" value="<?= $subtotal ?>"></td>
+                                                <td><?= $i['kode']; ?></td>
+                                                <td><?= $i['namabarang']; ?></td>
+                                                <td><?= $i['satuan']; ?></td>
+                                                <td><input type="text" name="jumlah" id="jumlah" value="<?= $i['jumlah']; ?>" style='width:35px;'></td>
+                                                <td><?= $i['harga']; ?></td>
+                                                <td><?= $i['jumlah'] * $i['harga']; ?></td>
+                                                <td><a href="/barang/hapustransaksi/?kode=<?= $i['kode']; ?>" onclick="confirm('apakah anda yakin ingin menghapus data barang ini');" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a> </td>
                                             </tr>
                                         <?php endforeach; ?>
 
@@ -189,6 +207,7 @@ use CodeIgniter\I18n\Time;
 
                             <div class="form-group">
                                 <a href="" class="btn btn-warning">Cetak</a>
+                                <a href="" class="btn btn-primary">Perbarui</a>
                             </div>
 
 
