@@ -78,15 +78,10 @@ use CodeIgniter\I18n\Time;
                                                 <form action="" method="get">
                                                     <?= csrf_field(); ?>
                                                     <select name="namapelanggan" id="namapelanggan" class="custom-select" onchange="this.form.submit()">
-                                                        <option value="A"> Pilih Pelanggan</option>
+                                                        <option value="a"> Pilih Pelanggan</option>
                                                         <?php foreach ($pelanggan as $p) : ?>
-                                                            <?php
-                                                            $selected = '';
-                                                            if ($p['namapelanggan']) {
-                                                                $selected = 'selected';
-                                                            }
-                                                            ?>
-                                                            <option selected><?= $p['namapelanggan']; ?></option>
+
+                                                            <option><?= $p['namapelanggan']; ?></option>
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </form>
@@ -156,60 +151,58 @@ use CodeIgniter\I18n\Time;
 
 
 
-
-                            <table class='table table-bordered' id='TabelTransaksi'>
-                                <thead>
-                                    <tr>
-
-                                        <th style='width:75px;'>Kode </th>
-                                        <th>Nama Barang</th>
-                                        <th style='width:100px;'>Satuan</th>
-                                        <th style='width:75px;'>Jumlah</th>
-                                        <th style='width:100px;'>Harga</th>
-                                        <th style='width:100px;'>Sub Total</th>
-                                        <th></th>
-
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (isset($_POST['namabarang'])) : ?>
-
-                                        <?php foreach ($_SESSION['isi'] as $i) :  ?>
-                                            <tr>
-                                                <td><?= $i['kode']; ?></td>
-                                                <td><?= $i['namabarang']; ?></td>
-                                                <td><?= $i['satuan']; ?></td>
-                                                <td><input type="text" name="jumlah" id="jumlah" value="<?= $i['jumlah']; ?>" style='width:35px;'></td>
-                                                <td><?= $i['harga']; ?></td>
-                                                <td><?= $i['jumlah'] * $i['harga']; ?></td>
-                                                <td><a href="/barang/hapustransaksi/?kode=<?= $i['kode']; ?>" onclick="confirm('apakah anda yakin ingin menghapus data barang ini');" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a> </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-
-                                    <?php endif; ?>
-                                    <?php if (!isset($_POST['namabarang'])) : ?>
+                            <form action="/barang/perbarui" method="post">
+                                <table class='table table-bordered' id='TabelTransaksi'>
+                                    <thead>
                                         <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td> </td>
-                                            <td>Data tidak tersedia</td>
+
+                                            <th style='width:75px;'>Kode </th>
+                                            <th>Nama Barang</th>
+                                            <th style='width:100px;'>Satuan</th>
+                                            <th style='width:75px;'>Jumlah</th>
+                                            <th style='width:100px;'>Harga</th>
+                                            <th style='width:100px;'>Sub Total</th>
+                                            <th></th>
+
+
                                         </tr>
-                                    <?php endif; ?>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (isset($_POST['namabarang'])) : ?>
 
-                            </table>
+                                            <?php foreach ($isi as $i) :  ?>
+                                                <tr>
+                                                    <td><input type="text" name="kode" id="kode" value="<?= $i['kode'] //($i['kode']) ? $i['kode'] : old('kode'); 
+                                                                                                        ?>" style="width:35px;"></td>
+                                                    <td><input type="text" name="namabarang" id="namabarang" value="<?= $i['namabarang'] //($i['namabarang']) ? $i['namabarang'] : old('namabarang'); 
+                                                                                                                    ?>" style="width:60px;"></td>
+                                                    <td><input type="text" name="satuan" id="satuan" value="<?= $i['satuan'] //($i['satuan']) ? $i['satuan'] : old('satuan'); 
+                                                                                                            ?>" style="width:35px;"> </td>
+                                                    <td><input type="text" name="jumlah" id="jumlah" value="<?= $i['jumlah'] //($i['jumlah']) ? $i['jumlah'] : old('jumlah'); 
+                                                                                                            ?>" style="width:25px;"></td>
+                                                    <td><input type="text" name="harga" id="harga" value="<?= $i['harga'] //($i['harga']) ? $i['harga'] : old('harga'); 
+                                                                                                            ?>" style="width:45px;"></td>
+                                                    <td><?= $i['jumlah'] * $i['harga']; ?></td>
+                                                    <td><a href="/barang/hapustransaksi/?kode=<?= $i['kode']; ?>" onclick="confirm('apakah anda yakin ingin menghapus data barang ini');" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a> </td>
+                                                </tr>
+                                            <?php endforeach; ?>
 
-                            <div class='alert alert-info TotalBayar'>
+                                        <?php endif; ?>
 
-                                <h2>Total : <span id='TotalBayar'>Rp. 0</span></h2>
-                                <input type="hidden" id='TotalBayarHidden'>
-                            </div>
+                                </table>
 
-                            <div class="form-group">
-                                <a href="" class="btn btn-warning">Cetak</a>
-                                <a href="" class="btn btn-primary">Perbarui</a>
-                            </div>
+                                <div class='alert alert-info TotalBayar'>
 
+                                    <h2>Total : <span id='TotalBayar'>Rp. 0</span></h2>
+                                    <input type="hidden" id='TotalBayarHidden'>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <input type="submit" class="btn btn-primary" value="Perbarui">
+                                </div>
+                            </form>
+                            <a href="/cetak/index" class="btn btn-warning">Cetak</a>
 
 
 

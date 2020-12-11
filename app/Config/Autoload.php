@@ -42,6 +42,8 @@ class Autoload extends AutoloadConfig
 	public $psr4 = [
 		APP_NAMESPACE => APPPATH, // For custom app namespace
 		'Config'      => APPPATH . 'Config',
+		'Mpdf' 		=> APPPATH . 'ThirdParty/mpdf/src',
+		'Dompdf'      => APPPATH . 'ThirdParty/dompdf/src',
 	];
 
 	/**
@@ -62,5 +64,8 @@ class Autoload extends AutoloadConfig
 	 *
 	 * @var array
 	 */
-	public $classmap = [];
+	public $classmap = [
+		'PHPExcel' => APPPATH . 'ThirdParty/PHPExcel/PHPExcel.php', //library PHPExcel
+		'Mpdf' => __DIR__ . '/vendor/autoload.php', //library mPDF
+	];
 }

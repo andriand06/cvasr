@@ -369,6 +369,7 @@ class Barang extends BaseController
             $_SESSION['isi'][] = $isi;
 
 
+
             $data = [
                 'judul' => 'Penjualan Barang',
                 'username' => $session->get('username'),
@@ -376,6 +377,7 @@ class Barang extends BaseController
                 'namabarang' => $this->nb,
                 'pelanggan' => $this->pelanggan_model->getPelanggan(),
                 'query' => $query,
+                'isi' => $_SESSION['isi'],
 
                 'barang' => $this->barangmodel->getBarang()
             ];
@@ -487,9 +489,20 @@ class Barang extends BaseController
 
             unset($_SESSION['isi'][$key]);
         }
+
         $_SESSION['isi'] = array_values($_SESSION['isi']);
+
         session()->setFlashdata('pesan', 'data berhasil dihapus!');
 
         return redirect()->to('/barang/penjualan')->withInput();
+    }
+    public function perbarui()
+    {
+        $jumlah = $_POST['jumlah'];
+
+        foreach ($_SESSION['isi'] as $key) {
+            $key['jumlah'] = $jumlah[$key];
+        }
+        return redirect()->to('/barang/penjualan');
     }
 }
