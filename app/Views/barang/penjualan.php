@@ -39,7 +39,7 @@ use CodeIgniter\I18n\Time;
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="panel panel-primary">
-                                <h5 class="panel-heading"><i class='fa fa-file-text-o fa-fw'></i>Informasi Nota</h5>
+                                <h5 class="panel-heading" id="nota"><i class='fa fa-file-text-o fa-fw'></i>Informasi Nota</h5>
                                 <div class="panel-body">
                                     <div class="form-horizontal">
                                         <div class="form-group">
@@ -68,17 +68,17 @@ use CodeIgniter\I18n\Time;
                                 </div>
                             </div>
                             <div class="panel panel-primary">
-                                <h5 class="panel-heading"><i class='fa fa-file-text-o fa-fw'></i>Informasi Pelanggan</h5>
+                                <h5 class="panel-heading" id="pelanggan"><i class='fa fa-file-text-o fa-fw'></i>Informasi Pelanggan</h5>
                                 <div class="panel-body">
                                     <div class="form-horizontal">
                                         <div class="form-group">
-                                            <label for="namapelanggan" class="col-sm-4 control-label">Pelanggan</label>
+                                            <label for="namapelanggan" id="labelpelanggan" class="col-sm-4 control-label">Pelanggan</label>
                                             <div class="col-sm-8">
 
                                                 <form action="" method="get">
                                                     <?= csrf_field(); ?>
-                                                    <select name="namapelanggan" id="namapelanggan" class="custom-select" onchange="this.form.submit()">
-                                                        <option value="a"> Pilih Pelanggan</option>
+                                                    <select name="namapelanggan" id="listpelanggan" class="custom-select" onchange="this.form.submit()">
+                                                        <option value=""> Pilih Pelanggan</option>
                                                         <?php foreach ($pelanggan as $p) : ?>
 
                                                             <option><?= $p['namapelanggan']; ?></option>
@@ -119,16 +119,16 @@ use CodeIgniter\I18n\Time;
                             </div>
                         </div>
                         <div class='col-sm-8'>
-                            <h5 class='judul-transaksi'>
+                            <h5 class='judul-transaksi' id="judultransaksi">
                                 <i class='fa fa-shopping-cart fa-fw'></i> Penjualan <i class='fa fa-angle-right fa-fw'></i> Transaksi
                             </h5>
 
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <a href="/barang/reset" class="btn btn-warning">Reset Keranjang</a>
+                                    <a href="/barang/reset" class="btn btn-warning" id="reset">Reset Keranjang</a>
                                     <form action="" method="post" class="form-inline">
 
-                                        <div class="input-group">
+                                        <div class="input-group" id="barang">
 
 
                                             <label for="namabarang">Nama Barang</label>
@@ -139,8 +139,8 @@ use CodeIgniter\I18n\Time;
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
-                                        <div class="input-group">
-                                            <input type="number" name="jumlah" id="jumlah" class="form-control" placeholder="Jumlah">
+                                        <div class="input-group" id="button">
+                                            <input type="number" name="jumlah" id="jumlah" class="form-control" placeholder="Jumlah" autocomplete="off">
                                             <input type="submit" value="Tambah" class="btn btn-primary">
 
                                         </div>
@@ -162,7 +162,7 @@ use CodeIgniter\I18n\Time;
                                             <th style='width:75px;'>Jumlah</th>
                                             <th style='width:100px;'>Harga</th>
                                             <th style='width:100px;'>Sub Total</th>
-                                            <th></th>
+                                            <th id="aksi"></th>
 
 
                                         </tr>
@@ -172,37 +172,48 @@ use CodeIgniter\I18n\Time;
 
                                             <?php foreach ($isi as $i) :  ?>
                                                 <tr>
-                                                    <td><input type="text" name="kode" id="kode" value="<?= $i['kode'] //($i['kode']) ? $i['kode'] : old('kode'); 
-                                                                                                        ?>" style="width:35px;"></td>
-                                                    <td><input type="text" name="namabarang" id="namabarang" value="<?= $i['namabarang'] //($i['namabarang']) ? $i['namabarang'] : old('namabarang'); 
-                                                                                                                    ?>" style="width:60px;"></td>
-                                                    <td><input type="text" name="satuan" id="satuan" value="<?= $i['satuan'] //($i['satuan']) ? $i['satuan'] : old('satuan'); 
-                                                                                                            ?>" style="width:35px;"> </td>
-                                                    <td><input type="text" name="jumlah" id="jumlah" value="<?= $i['jumlah'] //($i['jumlah']) ? $i['jumlah'] : old('jumlah'); 
-                                                                                                            ?>" style="width:25px;"></td>
-                                                    <td><input type="text" name="harga" id="harga" value="<?= $i['harga'] //($i['harga']) ? $i['harga'] : old('harga'); 
-                                                                                                            ?>" style="width:45px;"></td>
+                                                    <td><?= $i['kode'] //($i['kode']) ? $i['kode'] : old('kode'); 
+                                                        ?></td>
+                                                    <td><?= $i['namabarang'] //($i['namabarang']) ? $i['namabarang'] : old('namabarang'); 
+                                                        ?></td>
+                                                    <td><?= $i['satuan'] //($i['satuan']) ? $i['satuan'] : old('satuan'); 
+                                                        ?> </td>
+                                                    <td>
+                                                        <!--<input type="text" name="jumlah" id="jumlah" value="--><?= $i['jumlah'] //($i['jumlah']) ? $i['jumlah'] : old('jumlah'); 
+                                                                                                                    ?>
+                                                        <!--" style="width:25px;">-->
+                                                    </td>
+                                                    <td><?= $i['harga'] //($i['harga']) ? $i['harga'] : old('harga'); 
+                                                        ?></td>
                                                     <td><?= $i['jumlah'] * $i['harga']; ?></td>
-                                                    <td><a href="/barang/hapustransaksi/?kode=<?= $i['kode']; ?>" onclick="confirm('apakah anda yakin ingin menghapus data barang ini');" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a> </td>
+                                                    <td><a href="/barang/hapustransaksi/?kode=<?= $i['kode']; ?>" onclick="confirm('apakah anda yakin ingin menghapus data barang ini');" class="btn btn-danger" id="hapus"><i class="glyphicon glyphicon-remove"></i></a> </td>
                                                 </tr>
                                             <?php endforeach; ?>
 
                                         <?php endif; ?>
 
                                 </table>
-
+                                <?php
+                                $totalbayar = 0;
+                                if (isset($_SESSION['isi'])) {
+                                    foreach ($_SESSION['isi'] as $key => $value) {
+                                        $totalbayar += $value['harga'] * $value['jumlah'];
+                                    }
+                                }
+                                ?>
                                 <div class='alert alert-info TotalBayar'>
 
-                                    <h2>Total : <span id='TotalBayar'>Rp. 0</span></h2>
+                                    <h2>Total : <span id='TotalBayar'>Rp <?php echo number_format($totalbayar); ?> </span></h2>
                                     <input type="hidden" id='TotalBayarHidden'>
                                 </div>
-
-                                <div class="form-group">
+                                <!--
+                                <div class="form-group" id="perbarui">
 
                                     <input type="submit" class="btn btn-primary" value="Perbarui">
                                 </div>
+                                            -->
                             </form>
-                            <a href="/cetak/index" class="btn btn-warning">Cetak</a>
+                            <a href="/cetak/index" class="btn btn-warning" id="cetak">Cetak</a>
 
 
 

@@ -379,6 +379,7 @@ class Barang extends BaseController
                 'query' => $query,
                 'isi' => $_SESSION['isi'],
 
+
                 'barang' => $this->barangmodel->getBarang()
             ];
             return view('barang/penjualan', $data);
@@ -412,62 +413,8 @@ class Barang extends BaseController
         ];
         return view('barang/penjualan', $data);
     }
-    public function kasir()
-    {
-        if ($this->cek_status()) {
-            return redirect()->to('/login');
-        }
-        if (isset($_GET['namapelanggan'])) {
-            $this->namapelanggan = $_GET['namapelanggan'];
-        }
-        $query = $this->pelanggan_model->where('namapelanggan', $this->namapelanggan)->first();
 
-        $session = \Config\Services::session();
-        if (isset($_POST['namabarang'])) {
-            $this->nb = $_POST['namabarang'];
-            $b = $this->barangmodel->where('namabarang', $this->nb)->first();
-            $isi = [
-                'kode' => $b['Kode'],
-                'namabarang' => $b['NamaBarang'],
-                'satuan' => $b['Satuan'],
-                'jumlah' => $b['Jumlah'],
-                'harga' => $b['Harga'],
-            ];
-            $session->set($isi);
-            $isisession = [
-                'kode' => $session->get('kode'),
-                'namabarang' => $session->get('namabarang'),
-                'satuan' => $session->get('satuan'),
-                'jumlah' => $session->get('jumlah'),
-                'harga' => $session->get('harga'),
-                'subtotal' => (int) $session->get('jumlah') * (int) $session->get('harga'),
-            ];
 
-            $data = [
-                'judul' => 'Penjualan Barang',
-                'username' => $session->get('username'),
-                'datecreated' => $session->get('datecreated'),
-                'namabarang' => $this->nb,
-                'pelanggan' => $this->pelanggan_model->getPelanggan(),
-                'query' => $query,
-                'isisession' => $isisession,
-                'barang' => $this->barangmodel->getBarang()
-            ];
-            return view('barang/penjualan', $data);
-        } else {
-            $data = [
-                'judul' => 'Penjualan Barang',
-                'username' => $session->get('username'),
-                'datecreated' => $session->get('datecreated'),
-                'namabarang' => $this->nb,
-                'pelanggan' => $this->pelanggan_model->getPelanggan(),
-                'query' => $query,
-                'kode' => '',
-                'barang' => $this->barangmodel->getBarang()
-            ];
-            return view('barang/penjualan', $data);
-        }
-    }
     public function reset()
     {
         $_SESSION['isi'] = [];
@@ -496,13 +443,13 @@ class Barang extends BaseController
 
         return redirect()->to('/barang/penjualan')->withInput();
     }
-    public function perbarui()
-    {
-        $jumlah = $_POST['jumlah'];
+    // public function perbarui()
+    // {
+    //     $jumlah = $_POST['jumlah'];
 
-        foreach ($_SESSION['isi'] as $key) {
-            $key['jumlah'] = $jumlah[$key];
-        }
-        return redirect()->to('/barang/penjualan');
-    }
+    //     foreach ($_SESSION['isi'] as $key) {
+    //         $key['jumlah'] = $jumlah[$key];
+    //     }
+    //     return redirect()->to('/barang/penjualan');
+    // }
 }

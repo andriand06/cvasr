@@ -1,0 +1,22 @@
+@media PRINT {
+  #nota {
+    display: none;
+  }
+  #pelanggan {
+    display: none;
+  }
+  #judultransaksi {
+    display: none;
+  }
+  #reset,
+  #listpelanggan,
+  #barang,
+  #button,
+  #perbarui,
+  #cetak,
+  #labelpelanggan,
+  #hapus,
+  #aksi {
+    display: none;
+  }
+}
