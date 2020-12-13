@@ -16,7 +16,11 @@
   #cetak,
   #labelpelanggan,
   #hapus,
-  #aksi {
+  #aksi,
+  #keyword {
+    display: none;
+  }
+  .fa.fa-search {
     display: none;
   }
 }

@@ -7,5 +7,6 @@ use CodeIgniter\Model;
 class barangkeluar_model extends Model
 {
     protected $table = 'barang_keluar';
-    protected $allowedFields = ['KodeTransaksi', 'Kode', 'NamaBarang', 'Satuan', 'Jumlah', 'Harga', 'Total'];
+
+    protected $allowedFields = ['Tanggal', 'Kode', 'NamaBarang', 'Satuan', 'Jumlah', 'Harga', 'Total'];
 }

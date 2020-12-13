@@ -10,7 +10,7 @@
                 <div class="col-md-4">
                     <form action="<?= base_url('barang'); ?>" method="post">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="keyword" placeholder="Cari Nama Barang" aria-label="Recipient's username" aria-describedby="basic-addon2" autocomplete="off" autofocus>
+                            <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Cari Nama Barang" aria-label="Recipient's username" aria-describedby="basic-addon2" autocomplete="off" autofocus>
                             <div class="input-group-btn">
                                 <button class="btn btn-flat" type="submit" name="submit"><i class="fa fa-search"></i></button>
                             </div>
@@ -41,7 +41,7 @@
                         <th scope="col">Satuan</th>
                         <th scope="col">Jumlah</th>
                         <th scope="col">Harga</th>
-                        <th scope="col">Aksi</th>
+                        <th scope="col" id="aksi">Aksi</th>
 
                     </tr>
 
@@ -55,7 +55,7 @@
                             <td><?= $b['Satuan']; ?></td>
                             <td><?= $b['Jumlah']; ?></td>
                             <td><?= $b['Harga']; ?></td>
-                            <td>
+                            <td id="aksi">
 
                                 <a href="/barang/edit/<?= $b['id']; ?>" class="btn btn-warning">Edit</a>
                                 <form action="/barang/<?= $b['id']; ?>" method="post" style="display : inline;">
@@ -69,8 +69,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="container">
+        <div class="container" id="button">
             <a href="<?= base_url('barang/tambah'); ?>" class="btn btn-primary">Tambah Data Barang</a>
+            <a href="" onclick="window.print()" class="btn btn-warning">Cetak</a>
             <?= $pager->links(); ?>
         </div>
 

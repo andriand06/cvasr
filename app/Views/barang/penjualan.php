@@ -186,7 +186,7 @@ use CodeIgniter\I18n\Time;
                                                     <td><?= $i['harga'] //($i['harga']) ? $i['harga'] : old('harga'); 
                                                         ?></td>
                                                     <td><?= $i['jumlah'] * $i['harga']; ?></td>
-                                                    <td><a href="/barang/hapustransaksi/?kode=<?= $i['kode']; ?>" onclick="confirm('apakah anda yakin ingin menghapus data barang ini');" class="btn btn-danger" id="hapus"><i class="glyphicon glyphicon-remove"></i></a> </td>
+                                                    <td id="aksi"><a href="/barang/hapustransaksi/?kode=<?= $i['kode']; ?>" onclick="confirm('apakah anda yakin ingin menghapus data barang ini');" class="btn btn-danger" id="hapus"><i class="glyphicon glyphicon-remove"></i></a> </td>
                                                 </tr>
                                             <?php endforeach; ?>
 
@@ -213,7 +213,7 @@ use CodeIgniter\I18n\Time;
                                 </div>
                                             -->
                             </form>
-                            <a href="/cetak/index" class="btn btn-warning" id="cetak">Cetak</a>
+                            <a href="" onclick="window.print()" class="btn btn-warning" id="cetak">Cetak</a>
 
 
 

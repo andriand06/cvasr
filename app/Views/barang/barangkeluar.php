@@ -29,148 +29,86 @@
                     <?php endif;  ?>
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class='col-md-8'>
+                                <label for="tgl">Tanggal</label>
+                                <input type="datetime" name="tanggal" id="tgl" value="<?php echo new Time('now'); ?>">
+                                <h5 class='judul-transaksi' id="judultransaksi">
+                                    <i class='fa fa-shopping-cart fa-fw'></i> Transaksi <i class='fa fa-angle-right fa-fw'></i> Barang Keluar
+                                </h5>
 
-                                <div class="form-group">
-                                    <label for="namabarang">Nama Barang :</label>
-                                    <form action="/barang/read" method="get">
-                                        <?= csrf_field(); ?>
-                                        <select class="custom-select" onchange="this.form.submit()" id="namabarang" name="namabarang">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <a href="/barang/resetbarang" class="btn btn-warning" id="reset">Reset Keranjang</a>
+                                        <form action="" method="post" class="form-inline">
 
-                                            <?php foreach ($barang as $b) : ?>
-                                                <option selected><?= $b['NamaBarang']; ?></option>
-                                            <?php endforeach; ?>
+                                            <div class="input-group" id="barang">
 
 
+                                                <label for="namabarang">Nama Barang</label>
+                                                <select name="namabarang" id="namabarang" class="form-control">
+                                                    <option value="">Pilih Barang</option>
+                                                    <?php foreach ($barang as $b) : ?>
+                                                        <option value="<?= $b['NamaBarang']; ?> "><?= $b['NamaBarang']; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="input-group" id="button">
+                                                <input type="number" name="jumlah" id="jumlah" class="form-control" placeholder="Jumlah" autocomplete="off">
+                                                <input type="submit" value="Tambah" class="btn btn-primary">
 
-
-                                        </select>
-                                        <input type="datetime" name="tgl" id="tgl" value="<?php echo new Time('now'); ?>">
-                                    </form>
+                                            </div>
+                                        </form>
+                                    </div>
 
                                 </div>
 
-                                <?php if (isset($_GET['namabarang'])) : ?>
-
-                                    <form action="" method="post">
-                                        <?php
-                                        list($day, $month, $year, $hour, $min, $sec) = explode("/", date('d/m/Y/h/i/s'));
-                                        $tgl = $month . $day . $year . $hour . $min;
-
-                                        ?>
-                                        <div class="form-group">
-
-                                            <label for="kodetransaksi">Kode Transaksi</label>
-                                            <input type="text" class="form-control" id="kodetransaksi" name="kodetransaksi" autocomplete="off" value="ASR<?= $tgl ?> " disabled>
-
-                                        </div>
-                                        <div class="form-group">
-
-                                            <label for="kode">Kode</label>
-                                            <input type="text" class="form-control" id="kode" name="kode" autocomplete="off" value="<?= (old('kode')) ? old('kode') : $brg['Kode'] ?>">
-
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="namabarang">Nama Barang</label>
-                                            <input type="text" class="form-control" id="namabarang" name="namabarang" autocomplete="off" value="<?= (old('namabarang')) ? old('namabarang') : $brg['NamaBarang'] ?>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="satuan">Satuan </label>
-                                            <input type="text" class="form-control" id="satuan" name="satuan" autocomplete="off" value="<?= (old('satuan')) ? old('satuan') : $brg['Satuan'] ?>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="jumlah">Jumlah</label>
-                                            <input type="text" class="form-control <?= ($validation->hasError('jumlah')) ? 'is-invalid' : ''; ?>" id="jumlah" name="jumlah" autocomplete="off" value="<?= old('jumlah'); ?>">
-                                            <div class="invalid-feedback" style="color:red;">
-                                                <?= $validation->getError('jumlah'); ?>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Harga">Harga</label>
-                                            <input type="text" class="form-control" id="Harga" name="harga" autocomplete="off" value="<?= (old('harga')) ? old('harga') : $brg['Harga'] ?>">
-
-                                            <input type="submit" class="btn btn-primary" value="Tambah Data">
-                                        </div>
-                                    <?php endif; ?>
-                                    </form>
-                                    <?php if ($Jumlah) : ?>
-                                        <div class="row">
-                                            <div class="col md-8">
-                                                <div class="table-responsive">
-
-
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Kode Transaksi</th>
-                                                                <th scope="col">Kode</th>
-                                                                <th scope="col">Nama Barang</th>
-                                                                <th scope="col">Satuan</th>
-                                                                <th scope="col">Jumlah</th>
-                                                                <th scope="col">Harga</th>
-                                                                <th scope="col">Total</th>
-                                                            </tr>
-
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>ASR<?= $tgl ?> </td>
-                                                                <td><?= $Kode; ?></td>
-                                                                <td><?= $NamaBarang; ?></td>
-                                                                <td><?= $Satuan; ?></td>
-                                                                <td><?= $Jumlah; ?></td>
-                                                                <td><?= $Harga; ?></td>
-                                                                <td><?= $Total; ?></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <form action="/barang/transaksi" method="post">
-                                                    <?php
-                                                    list($day, $month, $year, $hour, $min, $sec) = explode("/", date('d/m/Y/h/i/s'));
-                                                    $tgl = $month . $day . $year . $hour . $min . $sec;
-
-                                                    ?>
-                                                    <div class="form-group">
-
-
-                                                        <input type="hidden" class="form-control" id="kodetransaksi" name="kodetransaksi" autocomplete="off" value="ASR<?= $tgl ?> ">
-
-                                                    </div>
-                                                    <div class="form-group">
-
-
-                                                        <input type="hidden" class="form-control" id="kode" name="kode" autocomplete="off" value="<?= (old('kode')) ? old('kode') : $brg['Kode'] ?>">
-
-                                                    </div>
-                                                    <div class="form-group">
-
-                                                        <input type="hidden" class="form-control" id="namabarang" name="namabarang" autocomplete="off" value="<?= (old('namabarang')) ? old('namabarang') : $brg['NamaBarang'] ?>">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="hidden" class="form-control" id="satuan" name="satuan" autocomplete="off" value="<?= (old('satuan')) ? old('satuan') : $Satuan ?>">
-
-                                                    </div>
-                                                    <div class="form-group">
-
-                                                        <input type="hidden" class="form-control <?= ($validation->hasError('jumlah')) ? 'is-invalid' : ''; ?>" id="jumlah" name="jumlah" autocomplete="off" value="<?= $Jumlah ?>">
-
-                                                    </div>
-                                                    <div class="form-group">
-
-                                                        <input type="hidden" class="form-control" id="Harga" name="harga" autocomplete="off" value="<?= (old('harga')) ? old('harga') : $Harga ?>">
-
-                                                        <input type="submit" class="btn btn-primary" value="Tambah Barang Keluar">
-                                                    </div>
-
-                                                </form>
-
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
-
-
                             </div>
+
+                            <form action="/barang/transaksi" method="post">
+                                <table class='table table-bordered' id='TabelTransaksi'>
+                                    <thead>
+                                        <tr>
+
+                                            <th style='width:75px;'>Kode </th>
+                                            <th>Nama Barang</th>
+                                            <th style='width:100px;'>Satuan</th>
+                                            <th style='width:75px;'>Jumlah</th>
+                                            <th style='width:100px;'>Harga</th>
+                                            <th style='width:100px;'>Sub Total</th>
+                                            <th id="aksi"></th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (isset($_POST['namabarang'])) : ?>
+
+                                            <?php foreach ($isi as $i) :  ?>
+                                                <tr>
+                                                    <td><input type="text" name="kode[]" class="form-control" value="<?= $i['kode']
+                                                                                                                        ?>">
+                                                    </td>
+                                                    <td><input type="text" name="namabarang[]" class="form-control" value="<?= $i['namabarang']
+                                                                                                                            ?>" style="width: 140px;"></td>
+                                                    <td><input type="text" name="satuan[]" class="form-control" value="<?= $i['satuan']
+                                                                                                                        ?>" style="width: 50px;"></td>
+                                                    <td><input type="number" name="jumlah[]" class="form-control" value="<?= $i['jumlah']
+                                                                                                                            ?>" style="width: 55px;"></td>
+                                                    <td><input type="text" name="harga[]" class="form-control" value="<?= $i['harga']
+                                                                                                                        ?>" style="width: 70px;"></td>
+                                                    <td><input type="text" name="subtotal[]" class="form-control" value="<?= $i['jumlah'] * $i['harga']
+                                                                                                                            ?>" style="width: 85px;"></td>
+
+                                                </tr>
+                                            <?php endforeach; ?>
+
+                                        <?php endif; ?>
+
+                                </table>
+                                <input type="submit" value="Tambah Barang Keluar" id="button" class="btn btn-primary">
+                            </form>
+                            <a href="" onclick="window.print()" id="cetak" class="btn btn-warning">Cetak</a>
+
                         </div>
 
                     </div>

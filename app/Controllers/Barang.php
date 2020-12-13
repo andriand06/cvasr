@@ -218,73 +218,147 @@ class Barang extends BaseController
         session()->setFlashdata('pesan', 'Data Berhasil diubah');
         return redirect()->to('/barang');
     }
+    // public function barangkeluar()
+    // {
+    //     if ($this->cek_status()) {
+    //         return redirect()->to('/login');
+    //     }
+    //     $session = \Config\Services::session();
+    //     $validation = \Config\Services::validation();
+
+    //     if (isset($_GET['namabarang'])) {
+    //         $isi = $_GET['namabarang'];
+    //         $barang = $this->barangmodel->where('namabarang', $isi)->get()->getRowArray();
+    //         $tgl = new Time('now');
+
+    //         if (!$this->validate([
+    //             'jumlah' => [
+    //                 'rules' => 'required|numeric',
+    //                 'errors' => [
+    //                     'required' => '{field} harus diisi',
+    //                     'numeric' => '{field} Format harus dalam bentuk angka',
+    //                 ],
+    //             ],
+    //         ])) {
+    //             $jumlah = $this->request->getVar('jumlah');
+    //             if ($jumlah == '' | $jumlah == null) {
+    //                 $total = 0;
+    //             }
+    //             $total = (int)$jumlah * (int)$this->request->getVar('harga');
+    //             $data = [
+    //                 'judul' => 'Barang Keluar',
+    //                 'username' => $session->get('username'),
+    //                 'datecreated' => $session->get('datecreated'),
+    //                 'tgl' => $tgl,
+    //                 'barang' => $barang,
+    //                 'validation' => $validation,
+    //                 'KodeTransaksi' => $this->barangmodel->getKodeTransaksi(),
+    //                 'Kode' => $this->request->getVar('kode'),
+    //                 'NamaBarang' => $isi,
+    //                 'Jumlah' =>  $jumlah = $this->request->getVar('jumlah'),
+    //                 'Satuan' => $this->request->getVar('satuan'),
+    //                 'Harga' => $this->request->getVar('harga'),
+    //                 'Total' => $total
+    //             ];
+    //         }
+
+    //         session()->setFlashdata('error', 'Mohon Lengkapi Form');
+
+    //         return view('barang/barangkeluar', $data);
+    //     } else {
+    //         $data = [
+    //             'judul' => 'Barang Keluar',
+
+    //             'username' => $session->get('username'),
+    //             'datecreated' => $session->get('datecreated'),
+    //             'barang' => $this->barangmodel->getBarang(),
+    //             'KodeTransaksi' => $this->barangmodel->getKodeTransaksi(),
+    //             'Kode' => '',
+    //             'Jumlah' => '',
+    //             'Satuan' => '',
+    //             'Harga' => '',
+    //             'Total' => $this->request->getVar('jumlah') * $this->request->getVar('harga')
+
+    //         ];
+
+    //         return view('barang/barangkeluar', $data);
+    //     }
+    // }
     public function barangkeluar()
     {
+        list($day, $month, $year, $hour, $min, $sec) = explode("/", date('d/m/Y/h/i/s'));
+        $tgl = $month . $day . $year . $hour . $min . $sec;
+        $session = \Config\Services::session();
+
         if ($this->cek_status()) {
             return redirect()->to('/login');
         }
-        $session = \Config\Services::session();
-        $validation = \Config\Services::validation();
 
-        if (isset($_GET['namabarang'])) {
-            $isi = $_GET['namabarang'];
-            $barang = $this->barangmodel->where('namabarang', $isi)->get()->getRowArray();
-            $tgl = new Time('now');
 
-            if (!$this->validate([
-                'jumlah' => [
-                    'rules' => 'required|numeric',
-                    'errors' => [
-                        'required' => '{field} harus diisi',
-                        'numeric' => '{field} Format harus dalam bentuk angka',
-                    ],
-                ],
-            ])) {
-                $jumlah = $this->request->getVar('jumlah');
-                if ($jumlah == '' | $jumlah == null) {
-                    $total = 0;
-                }
-                $total = (int)$jumlah * (int)$this->request->getVar('harga');
-                $data = [
-                    'judul' => 'Barang Keluar',
-                    'username' => $session->get('username'),
-                    'datecreated' => $session->get('datecreated'),
-                    'tgl' => $tgl,
-                    'barang' => $barang,
-                    'validation' => $validation,
-                    'KodeTransaksi' => $this->barangmodel->getKodeTransaksi(),
-                    'Kode' => $this->request->getVar('kode'),
-                    'NamaBarang' => $isi,
-                    'Jumlah' =>  $jumlah = $this->request->getVar('jumlah'),
-                    'Satuan' => $this->request->getVar('satuan'),
-                    'Harga' => $this->request->getVar('harga'),
-                    'Total' => $total
-                ];
-            }
+        if (isset($_POST['namabarang'])) {
+            $this->nb = $_POST['namabarang'];
+            $b = $this->barangmodel->where('namabarang', $this->nb)->get()->getRowArray();
+            $jumlah = $_POST['jumlah'];
+            $isi = [
 
-            session()->setFlashdata('error', 'Mohon Lengkapi Form');
+                'kode' => $b['Kode'],
+                'namabarang' => $b['NamaBarang'],
+                'satuan' => $b['Satuan'],
+                'jumlah' => $jumlah,
+                'harga' => $b['Harga'],
 
-            return view('barang/barangkeluar', $data);
-        } else {
+
+            ];
+
+
+            $_SESSION['isi'][] = $isi;
+
+
+
             $data = [
                 'judul' => 'Barang Keluar',
-
                 'username' => $session->get('username'),
                 'datecreated' => $session->get('datecreated'),
-                'barang' => $this->barangmodel->getBarang(),
-                'KodeTransaksi' => $this->barangmodel->getKodeTransaksi(),
-                'Kode' => '',
-                'Jumlah' => '',
-                'Satuan' => '',
-                'Harga' => '',
-                'Total' => $this->request->getVar('jumlah') * $this->request->getVar('harga')
+                'namabarang' => $this->nb,
+                'tgl' => $tgl,
+                'isi' => $_SESSION['isi'],
 
+
+
+
+                'barang' => $this->barangmodel->getBarang()
+            ];
+            return view('barang/barangkeluar', $data);
+        } elseif ($this->nb == null | $this->nb == '') {
+
+            $data = [
+                'judul' => 'Barang Keluar',
+                'username' => $session->get('username'),
+                'datecreated' => $session->get('datecreated'),
+                'namabarang' => $this->nb,
+
+
+                'kode' => '',
+                'barang' => $this->barangmodel->getBarang()
             ];
 
             return view('barang/barangkeluar', $data);
         }
-    }
 
+        $data = [
+            'judul' => 'Barang Keluar',
+            'username' => $session->get('username'),
+            'datecreated' => $session->get('datecreated'),
+            'nonota' => $tgl,
+
+
+            'barang' => $this->barangmodel->getBarang(),
+            'kode' => $session->get('kode')
+
+
+        ];
+        return view('barang/barangkeluar', $data);
+    }
     public function read()
     {
         if ($this->cek_status()) {
@@ -324,16 +398,33 @@ class Barang extends BaseController
         $jumlah = $this->request->getVar('jumlah');
         $total = (int)$jumlah * (int)$this->request->getVar('harga');
 
-        $this->barangkeluar_model->save([
-            'KodeTransaksi' => $this->request->getVar('kodetransaksi'),
-            'Kode' => $this->request->getVar('kode'),
-            'NamaBarang' => $this->request->getVar('namabarang'),
-            'Jumlah' =>  $jumlah,
-            'Satuan' => $this->request->getVar('satuan'),
-            'Harga' => $this->request->getVar('harga'),
-            'Total' => $total,
+        $tanggal = date("Y-m-d H:i:s");
 
-        ]);
+
+        // $this->barangkeluar_model->save([
+        //     'Tanggal' => $tanggal,
+        //     'Kode' => $this->request->getVar('kode'),
+        //     'NamaBarang' => $this->request->getVar('namabarang'),
+        //     'Jumlah' =>  $jumlah,
+        //     'Satuan' => $this->request->getVar('satuan'),
+        //     'Harga' => $this->request->getVar('harga'),
+        //     'Total' => $total,
+        $this->barangkeluar_model->save([]);
+        $result = array();
+        foreach ($_POST['namabarang'] as $key => $val) {
+            $result[] = array(
+                'Tanggal' => $tanggal,
+                'Kode' => $_POST['kode'][$key],
+                'NamaBarang' => $_POST['namabarang'][$key],
+                'Satuan' => $_POST['satuan'][$key],
+                'Jumlah' => $_POST['jumlah'][$key],
+                'Harga' => $_POST['harga'][$key],
+                'Total' => $_POST['subtotal'][$key],
+            );
+        }
+        $this->barangkeluar_model->insertBatch($result);
+
+
         session()->setFlashdata('pesan', 'Data Berhasil ditambahkan');
         return redirect()->to('/barang/barangkeluar');
     }
@@ -417,12 +508,25 @@ class Barang extends BaseController
 
     public function reset()
     {
+        if ($this->cek_status()) {
+            return redirect()->to('login');
+        }
         $_SESSION['isi'] = [];
         return redirect()->to('/barang/penjualan');
     }
+    public function resetbarang()
+    {
+        if ($this->cek_status()) {
+            return redirect()->to('login');
+        }
+        $_SESSION['isi'] = [];
+        return redirect()->to('/barang/barangkeluar');
+    }
     public function hapustransaksi()
     {
-
+        if ($this->cek_status()) {
+            return redirect()->to('login');
+        }
         $kode = $_GET['kode'];
 
         $isi = $_SESSION['isi'];
